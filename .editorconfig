@@ -6,6 +6,6 @@ end_of_line = lf
 insert_final_newline = true
 root = true
 
-[*.py]
-indent_size = 4
-tab_width = 4
+[*.cpp]
+indent_size = 2
+tab_width = 2
