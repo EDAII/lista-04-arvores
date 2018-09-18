@@ -1,8 +1,8 @@
 #include "iostream"
 
-#ifndef null
-#define null NULL
-#endif
+#define RED 0
+#define BLACK 1
+#define NO_INFO -666
 
 using namespace std;
 
@@ -17,7 +17,7 @@ typedef struct x
 
 int height(Node *root)
 {
-  if (root != null)
+  if (root != NULL)
   {
     int hright, hleft;
     hright = height(root->right) + 1;
@@ -86,7 +86,7 @@ Node *new_element(int value)
 
 Node *insert(Node *root, int value)
 {
-  if (root == null)
+  if (root == NULL)
   {
     root = new_element(value);
     return root;
@@ -150,6 +150,51 @@ int srch_avl(Node *root, int target)
 // ---
 
 // VERMELHO E PRETO
+typedef struct t
+{
+  int color = BLACK;
+  int value;
+  struct t* parent = NULL;
+  struct t* left = NULL;
+  struct t* right = NULL;
+} Brnode;
+
+Brnode * create_brnode(int value, int color = RED)
+{
+  Brnode* noob_node = (Brnode*) malloc(sizeof(Brnode));
+  noob_node->value = value;
+  noob_node->color = color;
+  return noob_node;
+}
+
+void set_parent(Brnode *daddy, Brnode *child)
+{
+  child->parent = daddy;
+}
+
+Brnode * br_insert(Brnode * root, int value)
+{
+  if (root == NULL)
+  {
+    root = create_brnode(value);
+    root->left = NULL;
+    root->right = NULL;
+    return root;
+  }
+  else if (value > root->value)
+  {
+    root->right = br_insert(root->right, value);
+    set_parent(root, root->right);
+    // check color change
+  }
+  else if (value <= root->value)
+  {
+    root->left = br_insert(root->left, value);
+    set_parent(root, root->left);
+    // check color change
+  }
+  
+}
 // ---
 
 int main(int argc, char const *argv[])
