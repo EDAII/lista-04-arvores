@@ -152,7 +152,7 @@ int srch_avl(Node *root, int target)
 // VERMELHO E PRETO
 typedef struct t
 {
-  int color = BLACK;
+  int color = RED;
   int value = NO_INFO;
   struct t* left = NULL;
   struct t* right = NULL;
@@ -161,7 +161,7 @@ typedef struct t
 // FIXME
 Brnode* infoless;
 
-Brnode * create_brnode(int value, int color = BLACK)
+Brnode * create_brnode(int value, int color=RED)
 {
   Brnode* noob_node = (Brnode*) malloc(sizeof(Brnode));
   noob_node->value = value;
@@ -173,24 +173,28 @@ Brnode * br_insert(Brnode * root, int value)
 {
   if (root == NULL)
   {
-    root = create_brnode(value);
+    root = create_brnode(value, BLACK);
     root->left = infoless;
     root->right = infoless;
-    return root;
+    return root;  
   }
   else if (value > root->value)
   {
     root->right = br_insert(root->right, value);
-    // check color change
+    // check for a color change
   }
-  else if (value < root->value)
+  else if (value <= root->value)
   {
     root->left = br_insert(root->left, value);
-    // check color change
+    // check for a color change
   }
-  else
+  else if (root->value == NO_INFO)
   {
-    // key already exists in tree
+    // leaf node, so we create the child
+    root = create_brnode(value);
+    root->left = infoless;
+    root->right = infoless;
+    return root;
   }
   
 }
