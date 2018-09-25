@@ -152,16 +152,14 @@ int srch_avl(Node *root, int target)
 // VERMELHO E PRETO
 typedef struct t
 {
-  int color = RED;
-  int value = NO_INFO;
+  int color = BLACK;
+  int value;
+  struct t* parent = NULL;
   struct t* left = NULL;
   struct t* right = NULL;
 } Brnode;
 
-// FIXME
-Brnode* infoless;
-
-Brnode * create_brnode(int value, int color=RED)
+Brnode * create_brnode(int value, int color = RED)
 {
   Brnode* noob_node = (Brnode*) malloc(sizeof(Brnode));
   noob_node->value = value;
@@ -169,32 +167,31 @@ Brnode * create_brnode(int value, int color=RED)
   return noob_node;
 }
 
+void set_parent(Brnode *daddy, Brnode *child)
+{
+  child->parent = daddy;
+}
+
 Brnode * br_insert(Brnode * root, int value)
 {
   if (root == NULL)
   {
-    root = create_brnode(value, BLACK);
-    root->left = infoless;
-    root->right = infoless;
-    return root;  
+    root = create_brnode(value);
+    root->left = NULL;
+    root->right = NULL;
+    return root;
   }
   else if (value > root->value)
   {
     root->right = br_insert(root->right, value);
-    // check for a color change
+    set_parent(root, root->right);
+    // check color change
   }
   else if (value <= root->value)
   {
     root->left = br_insert(root->left, value);
-    // check for a color change
-  }
-  else if (root->value == NO_INFO)
-  {
-    // leaf node, so we create the child
-    root = create_brnode(value);
-    root->left = infoless;
-    root->right = infoless;
-    return root;
+    set_parent(root, root->left);
+    // check color change
   }
   
 }
