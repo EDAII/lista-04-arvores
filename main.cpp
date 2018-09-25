@@ -1,8 +1,10 @@
 #include "iostream"
+#include <ctype.h>
 
 #define RED 0
 #define BLACK 1
 #define NO_INFO -666
+#define OPTIONS "\n\nO que deseja fazer?\nI- inserir valor na AVL\nB- buscar valor na AVL\nD- deletar valor na AVL\nP- imprimir AVL\nX- sair"
 
 using namespace std;
 
@@ -12,6 +14,7 @@ typedef struct x
   int value;
   struct x *left;
   struct x *right;
+  int height;
   int fb;
 } Node;
 
@@ -147,58 +150,113 @@ int srch_avl(Node *root, int target)
   }
   return -1;
 }
+
+void pre_order(Node *root)
+{
+  if (root != NULL)
+  {
+    pre_order(root->left);
+    cout << root->value << ' ';
+    pre_order(root->right);
+  }
+}
 // ---
 
 // VERMELHO E PRETO
-typedef struct t
-{
-  int color = BLACK;
-  int value;
-  struct t* parent = NULL;
-  struct t* left = NULL;
-  struct t* right = NULL;
-} Brnode;
+// typedef struct t
+// {
+//   int color = BLACK;
+//   int value;
+//   struct t* parent = NULL;
+//   struct t* left = NULL;
+//   struct t* right = NULL;
+// } Brnode;
 
-Brnode * create_brnode(int value, int color = RED)
-{
-  Brnode* noob_node = (Brnode*) malloc(sizeof(Brnode));
-  noob_node->value = value;
-  noob_node->color = color;
-  return noob_node;
-}
+// Brnode * create_brnode(int value, int color = RED)
+// {
+//   Brnode* noob_node = (Brnode*) malloc(sizeof(Brnode));
+//   noob_node->value = value;
+//   noob_node->color = color;
+//   return noob_node;
+// }
 
-void set_parent(Brnode *daddy, Brnode *child)
-{
-  child->parent = daddy;
-}
+// void set_parent(Brnode *daddy, Brnode *child)
+// {
+//   child->parent = daddy;
+// }
 
-Brnode * br_insert(Brnode * root, int value)
-{
-  if (root == NULL)
-  {
-    root = create_brnode(value);
-    root->left = NULL;
-    root->right = NULL;
-    return root;
-  }
-  else if (value > root->value)
-  {
-    root->right = br_insert(root->right, value);
-    set_parent(root, root->right);
-    // check color change
-  }
-  else if (value <= root->value)
-  {
-    root->left = br_insert(root->left, value);
-    set_parent(root, root->left);
-    // check color change
-  }
+// Brnode * br_insert(Brnode * root, int value)
+// {
+//   if (root == NULL)
+//   {
+//     root = create_brnode(value);
+//     root->left = NULL;
+//     root->right = NULL;
+//     return root;
+//   }
+//   else if (value > root->value)
+//   {
+//     root->right = br_insert(root->right, value);
+//     set_parent(root, root->right);
+//     // check color change
+//   }
+//   else if (value <= root->value)
+//   {
+//     root->left = br_insert(root->left, value);
+//     set_parent(root, root->left);
+//     // check color change
+//   }
   
-}
+// }
 // ---
 
 int main(int argc, char const *argv[])
 {
-  
+  Node* avl = NULL;
+  char opt;
+  int value = 0;
+
+  do
+  {
+    cout << OPTIONS << endl;
+    cin >> opt;
+    opt = tolower(opt);
+    
+    switch (opt)
+    {
+      case 'i':
+        cout << "digite o valor: ";
+        cin >> value;
+        avl = insert(avl, value);
+        break;
+
+      case 'b':
+        cout << "digite o valor: ";
+        cin >> value;
+        if(srch_avl(avl, value) != -1)
+        {
+          cout << "Encontrado o número " << value << '!' << endl;
+          cout << endl;
+          pre_order(avl);
+        }
+        else
+        {
+          cout << "Valor nao encontrado" << endl;
+        }
+        break;
+      case 'd':
+        // cout << "digite o valor: ";
+        // cin >> value;
+        // avl = ;
+        break;
+      case 'p':
+          pre_order(avl);
+        break;
+
+      default:
+        break;
+    }
+  } while (opt != 'x');
+   
   return 0;
 }
